@@ -4,8 +4,8 @@ do {
     let day = day8
     print("RUN")
 //    try run(day.part1, .real)//.debug()
-    try run(day.part2, .example).debug()
-//    try run(day)
+//    try run(day.part2, .example).debug()
+    try run(day)
 } catch {}
 
 /*
