@@ -18,7 +18,7 @@ let day8 = Problem(
     """,
     parse: parsePatternsAndOutputValues(_:),
     solve: countUniqueCountDigitsOnOutput(_:), // 26    |    548
-    solve2: addAllOutputs(_:) // 61229    | 
+    solve2: addAllOutputs(_:) // 61229    |
 )
 
 private func parsePatternsAndOutputValues(

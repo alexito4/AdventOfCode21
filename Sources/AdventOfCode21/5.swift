@@ -26,15 +26,6 @@ struct Line {
     var end: Point
 }
 
-struct Point: Hashable, CustomStringConvertible {
-    var x: Int
-    var y: Int
-
-    var description: String {
-        "(\(x), \(y))"
-    }
-}
-
 private func parseVents(_ input: String) -> [Line] {
     let pointParser = Int.parser()
         .skip(",")
