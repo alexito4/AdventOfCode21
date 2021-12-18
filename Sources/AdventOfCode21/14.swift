@@ -67,8 +67,7 @@ private func parse(_ input: String) -> PolymerInstructions {
     let parser = templateParser
         .skip(Whitespace().pullback(\.utf8))
         .take(rulesParser)
-        .skip(Whitespace().pullback(\.utf8))
-        .skip(End())
+        .skipFinalLine()
         .map { PolymerInstructions(template: String($0), insertionRules: Dictionary(uniqueKeysWithValues: $1)) }
 
     return parser.fullParse(input)!

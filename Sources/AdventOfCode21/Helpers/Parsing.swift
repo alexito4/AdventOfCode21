@@ -2,15 +2,10 @@
 import Parsing
 
 extension Parser where Input == Substring {
-    func finalLine() -> AnyParser<Input, Output> {
-        skip(
-            End()
-                .orElse(
-                    Skip("\n")
-                        .skip(End())
-                )
-        )
-        .eraseToAnyParser()
+    func skipFinalLine() -> AnyParser<Input, Output> {
+        skip(Whitespace().pullback(\.utf8))
+            .skip(End())
+            .eraseToAnyParser()
     }
 }
 

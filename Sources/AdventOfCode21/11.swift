@@ -32,7 +32,7 @@ private func parseOctopuses(_ input: String) -> Map2d {
         atLeast: 1,
         separator: "\n"
     )
-    .finalLine()
+    .skipFinalLine()
     return parser.fullParse(input)!
 }
 

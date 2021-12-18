@@ -75,7 +75,7 @@ private func parsePaper(_ input: String) -> Paper {
     let parser = pointsParser
         .skip(Whitespace().pullback(\.utf8))
         .take(foldsParser)
-        .finalLine()
+        .skipFinalLine()
         .map(Paper.init(dots:folds:))
 
     return parser.fullParse(input)!

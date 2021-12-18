@@ -1,8 +1,9 @@
 do {
-    let day = day14
+    let day = day15
     print("RUN")
 //    try run(day.part1, .real)//.debug()
 //    try run(day.part2, .example).debug()
+//    try run(day.part2, .real).debug()
     try run(day)
 } catch {}
 

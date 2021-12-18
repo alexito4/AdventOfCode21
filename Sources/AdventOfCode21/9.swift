@@ -28,7 +28,7 @@ private func parseHeightmap(_ input: String) -> HeightMap {
         atLeast: 1,
         separator: "\n"
     )
-    .finalLine()
+    .skipFinalLine()
 
 //    parser.test(input)
 

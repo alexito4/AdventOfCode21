@@ -138,6 +138,16 @@ extension Map2d {
         points().lazy.map { self[$0] }
     }
 
+    func mapPointsAndValues(_ f: (inout Int, Point) -> Void) -> Map2d {
+        var copy = self
+        for y in copy.indices {
+            for x in copy[y].indices {
+                f(&copy[x: x, y: y], Point(x: x, y: y))
+            }
+        }
+        return copy
+    }
+
     func forEachPoint(_ f: (Point) -> Void) {
         for y in indices {
             for x in self[y].indices {
@@ -160,11 +170,33 @@ extension Map2d {
         .compactMap { $0 }
     }
 
+    func adjecent4PointsOf(_ point: Point) -> [Point] {
+        adjecent4PointsOf(x: point.x, y: point.y)
+    }
+
+    func adjecent4PointsOf(x: Int, y: Int) -> [Point] {
+        [ // lazy dev, try acces instead of doing the check ^^'
+            Point(x: x, y: y - 1).let { self[safe: $0] == nil ? nil : $0 }, // N
+            Point(x: x + 1, y: y).let { self[safe: $0] == nil ? nil : $0 }, // E
+            Point(x: x, y: y + 1).let { self[safe: $0] == nil ? nil : $0 }, // S
+            Point(x: x - 1, y: y).let { self[safe: $0] == nil ? nil : $0 }, // W
+        ]
+        .compactMap { $0 }
+    }
+
     func draw() -> String {
         map {
             $0.map { String($0) }
                 .joined()
         }
         .joined(separator: "\n")
+    }
+
+    var topLeftPoint: Point {
+        Point(x: 0, y: 0)
+    }
+
+    var bottomRightPoint: Point {
+        Point(x: self[0].count - 1, y: count - 1)
     }
 }
