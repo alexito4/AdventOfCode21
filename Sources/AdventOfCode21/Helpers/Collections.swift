@@ -39,6 +39,12 @@ enum LoopReturn {
     case `break`
 }
 
+extension Collection {
+    func toArray() -> [Element] {
+        Array(self)
+    }
+}
+
 extension Collection where Element == Int {
     func sum() -> Element {
         reduce(0, +)
