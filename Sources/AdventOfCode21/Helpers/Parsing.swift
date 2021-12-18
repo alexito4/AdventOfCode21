@@ -2,7 +2,7 @@
 import Parsing
 
 extension Parser where Input == Substring {
-    func endLine() -> AnyParser<Input, Output> {
+    func finalLine() -> AnyParser<Input, Output> {
         skip(
             End()
                 .orElse(

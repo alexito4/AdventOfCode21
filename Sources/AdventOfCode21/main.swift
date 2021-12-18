@@ -1,7 +1,5 @@
-print("START")
-
 do {
-    let day = day11
+    let day = day14
     print("RUN")
 //    try run(day.part1, .real)//.debug()
 //    try run(day.part2, .example).debug()

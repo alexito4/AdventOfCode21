@@ -1,10 +1,3 @@
-//
-//  File.swift
-//  
-//
-//  Created by Alejandro Martinez on 11/12/21.
-//
-
 import Foundation
 import Parsing
 
@@ -24,7 +17,7 @@ let day11 = Problem(
     """,
     parse: parseOctopuses(_:),
     solve: calculateTotalFlashes(_:), // 1656    |     1667
-    solve2: firstSyncFlash(_:)          // 195          |  488
+    solve2: firstSyncFlash(_:) // 195          |  488
 )
 
 private func parseOctopuses(_ input: String) -> Map2d {
@@ -39,27 +32,27 @@ private func parseOctopuses(_ input: String) -> Map2d {
         atLeast: 1,
         separator: "\n"
     )
-    .endLine()
+    .finalLine()
     return parser.fullParse(input)!
 }
 
 // How many total flashes are there after 100 steps?
 private func calculateTotalFlashes(_ map: Map2d) throws -> Int {
     let steps = 100
-    var map = map //parseOctopuses("""
-//   11111
-//   19991
-//   19191
-//   19991
-//   11111
-//   """)
+    var map = map // parseOctopuses("""
+    //   11111
+    //   19991
+    //   19191
+    //   19991
+    //   11111
+    //   """)
 //    map.draw().debug()
 //    print("---")
 
     var totalFlashes = 0
-    for _ in (1...steps) {
+    for _ in 1...steps {
         // Sum flashes
-        totalFlashes +=  map.simulateStep()
+        totalFlashes += map.simulateStep()
 //        print("After step \(step)")
 //        map.draw().debug()
 //        print("---")
@@ -85,30 +78,30 @@ private func firstSyncFlash(_ map: Map2d) throws -> Int {
 private extension Map2d {
     mutating func simulateStep() -> Int {
         var flashed = Set<Point>()
-        for point in self.points() {
-            self.increaseEnergy(point, &flashed)
+        for point in points() {
+            increaseEnergy(point, &flashed)
         }
         // Reset map
         flashed.forEach {
             self[$0] = 0
         }
-        
+
         return flashed.count
     }
-    
+
     mutating func increaseEnergy(_ point: Point, _ alreadyFlashed: inout Set<Point>) {
         self[point] += 1
 
-        if self[point] > 9 && !alreadyFlashed.contains(point) {
+        if self[point] > 9, !alreadyFlashed.contains(point) {
             alreadyFlashed.insert(point)
-            
+
             for adj in adjecentPointsOf(x: point.x, y: point.y) {
                 increaseEnergy(adj, &alreadyFlashed)
             }
         }
     }
-    
+
     func allFlashed() -> Bool {
-        self.allElements().allSatisfy { $0 == 0 }
+        allElements().allSatisfy { $0 == 0 }
     }
 }

@@ -41,8 +41,6 @@ private func scoreCorruptionErrors(_ input: String) throws -> Int {
                 }
             }
         }
-        
-        
     }
     return totalCorruptionScore
 }
@@ -67,18 +65,18 @@ private func autocompleteScore(_ input: String) throws -> Int {
                 }
             }
         }
-        
+
         if corrupted {
             continue
         }
-        
+
         var correction = [Character]()
         while !stack.isEmpty {
             let start = stack.popLast()!
             let end = startsToEnds[start]!
             correction.append(end)
         }
-        
+
 //        print("Incomplete:", line, "correction:", correction)
 
         var autocompleteScore = 0
@@ -87,10 +85,10 @@ private func autocompleteScore(_ input: String) throws -> Int {
             autocompleteScore += completionScore[char]!
         }
         allAutocompleteScores.append(autocompleteScore)
-        
+
 //        print("Score", autocompleteScore)
     }
-    
+
     return Int(allAutocompleteScores
         .median())
 }
@@ -108,14 +106,14 @@ let ends = Set(delimiters.map(\.right))
 let startsToEnds = Dictionary(uniqueKeysWithValues: delimiters.map { ($0.left, $0.right) })
 let endsToStarts = Dictionary(uniqueKeysWithValues: delimiters.map { ($0.right, $0.left) })
 
-let corruptionScore: Dictionary<Character, Int> = [
+let corruptionScore: [Character: Int] = [
     ")": 3,
     "]": 57,
     "}": 1197,
     ">": 25137,
 ]
 
-let completionScore: Dictionary<Character, Int> = [
+let completionScore: [Character: Int] = [
     ")": 1,
     "]": 2,
     "}": 3,

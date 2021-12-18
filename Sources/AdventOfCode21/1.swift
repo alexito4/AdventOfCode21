@@ -40,7 +40,7 @@ func countIncreasesWindows(measurments: [Int]) -> Int {
     measurments
         .windows(ofCount: 3)
         .map { $0.reduce(0, +) }
-        .debug()
+//        .debug()
         .let(countIncreases(measurments:))
-        .debug()
+//        .debug()
 }

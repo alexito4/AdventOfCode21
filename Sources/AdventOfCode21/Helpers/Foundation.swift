@@ -42,6 +42,14 @@ extension String {
             return "\(pad)\(self)"
         }
     }
+
+    var isUppercase: Bool {
+        first(where: \.isLowercase) == nil
+    }
+
+    var isLowercase: Bool {
+        first(where: \.isUppercase) == nil
+    }
 }
 
 extension Bool {

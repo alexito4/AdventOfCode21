@@ -1,4 +1,4 @@
-struct ProblemPart<Input, Output> {
+struct ProblemPart<Input, Output>: Hashable {
     var day: Int
     var part: Int
 
@@ -6,9 +6,18 @@ struct ProblemPart<Input, Output> {
     var parse: (String) -> Input
 
     var solve: (Input) throws -> Output
+
+    func hash(into hasher: inout Hasher) {
+        hasher.combine(day)
+        hasher.combine(part)
+    }
+
+    static func == (lhs: Self, rhs: Self) -> Bool {
+        lhs.day == rhs.day && lhs.day == rhs.day
+    }
 }
 
-struct Problem<Input, Output> {
+struct Problem<Input, Output>: Hashable {
     var part1: ProblemPart<Input, Output>
     var part2: ProblemPart<Input, Output>
 
@@ -31,8 +40,7 @@ struct Problem<Input, Output> {
         solve2: @escaping (Input) throws -> Output
     ) {
         let parsedExample = parse(rawExample)
-        part1 = .init(day: day, part: 1, example: parsedExample, parse: parse, solve: solve)
-        part2 = .init(day: day, part: 2, example: parsedExample, parse: parse, solve: solve2)
+        self.init(day: day, example: parsedExample, parse: parse, solve: solve, solve2: solve2)
     }
 }
 
@@ -91,24 +99,18 @@ func run<I, O>(
     return try problem.solve(input)
 }
 
+func _run<I, O>(
+    _ part: ProblemPart<I, O>,
+    _ d: ProblemData
+) throws {
+    let output = try run(part, d)
+    print("Day \(part.day) - Part \(part.part) - \(d)")
+    print("==>", output)
+}
+
 func run<I, O>(_ problem: Problem<I, O>) throws {
-    for (p, d) in product(
-        [problem.part1, problem.part2],
-        [ProblemData.example, .real]
-    ) {
-        do {
-            let output = try run(p, d)
-            print("Day \(p.day) - Part \(p.part) - \(d)")
-            print("==>", output)
-        } catch {
-            if d == .example {
-                // if example failed no need to continue
-                return
-            }
-            if p.part == 1 {
-                // if part 1 failed no need to continue
-                return
-            }
-        }
-    }
+    try _run(problem.part1, .example)
+    try _run(problem.part1, .real)
+    try _run(problem.part2, .example)
+    try _run(problem.part2, .real)
 }

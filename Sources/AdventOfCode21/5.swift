@@ -132,7 +132,7 @@ private func howManyPointsWith2LinesOverlapDiagonal(_ lines: [Line]) throws -> I
         }
     }
 
-    drawBoard(counts)
+//    drawBoard(counts)
 
     let dangerousOverlap = 2
     let numberOfPointsWithMoreOverlap = counts.filter { $0.value >= dangerousOverlap }.count

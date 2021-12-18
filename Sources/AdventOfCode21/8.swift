@@ -154,7 +154,7 @@ private func addAllOutputs(_ entries: [Entry]) throws -> Int {
             }
         }
 
-        print(String(allSegments.makeDrawable().map { realToMixed[$0] ?? $0 }))
+//        print(String(allSegments.makeDrawable().map { realToMixed[$0] ?? $0 }))
 //        print(solution.sorted(by: binaryCompare(\.key, by: <)))
 
 //        print("Patterns:")

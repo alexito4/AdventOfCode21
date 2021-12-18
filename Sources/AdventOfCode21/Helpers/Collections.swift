@@ -26,6 +26,14 @@ extension Array {
     }
 }
 
+extension Array {
+    func appending(_ newElement: Element) -> Array {
+        var copy = Array(self)
+        copy.append(newElement)
+        return copy
+    }
+}
+
 enum LoopReturn {
     case `continue`
     case `break`
@@ -90,13 +98,11 @@ extension Map2d {
             self[y][x] = newValue
         }
     }
-    
+
     subscript(safe point: Point) -> Int? {
-        get {
-            self[safe: point.y]?[safe: point.x]
-        }
+        self[safe: point.y]?[safe: point.x]
     }
-    
+
     subscript(point: Point) -> Int {
         get {
             self[point.y][point.x]
@@ -105,8 +111,8 @@ extension Map2d {
             self[point.y][point.x] = newValue
         }
     }
-    
-    func points() -> AnyIterator<Point>  {
+
+    func points() -> AnyIterator<Point> {
         var y = 0
         var x = -1
         return AnyIterator {
@@ -121,33 +127,33 @@ extension Map2d {
             return Point(x: x, y: y)
         }
     }
-    
+
     func allElements() -> LazyMapSequence<LazySequence<AnyIterator<Point>>.Elements, Int> {
         points().lazy.map { self[$0] }
     }
-    
+
     func forEachPoint(_ f: (Point) -> Void) {
-        for y in self.indices {
+        for y in indices {
             for x in self[y].indices {
-               f(Point(x: x, y: y))
+                f(Point(x: x, y: y))
             }
         }
     }
-    
+
     func adjecentPointsOf(x: Int, y: Int) -> [Point] {
         [ // lazy dev, try acces instead of doing the check ^^'
-            Point(x: x, y: y - 1).let { self[safe: $0] == nil ? nil : $0 },         // N
-            Point(x: x + 1, y: y - 1).let { self[safe: $0] == nil ? nil : $0 },     // NE
-            Point(x: x + 1, y: y).let { self[safe: $0] == nil ? nil : $0 },         // E
-            Point(x: x + 1, y: y + 1).let { self[safe: $0] == nil ? nil : $0 },     // SE
-            Point(x: x, y: y + 1).let { self[safe: $0] == nil ? nil : $0 },         // S
-            Point(x: x - 1, y: y + 1).let { self[safe: $0] == nil ? nil : $0 },     // SW
-            Point(x: x - 1, y: y).let { self[safe: $0] == nil ? nil : $0 },         // W
-            Point(x: x - 1, y: y - 1).let { self[safe: $0] == nil ? nil : $0 }      // NW
+            Point(x: x, y: y - 1).let { self[safe: $0] == nil ? nil : $0 }, // N
+            Point(x: x + 1, y: y - 1).let { self[safe: $0] == nil ? nil : $0 }, // NE
+            Point(x: x + 1, y: y).let { self[safe: $0] == nil ? nil : $0 }, // E
+            Point(x: x + 1, y: y + 1).let { self[safe: $0] == nil ? nil : $0 }, // SE
+            Point(x: x, y: y + 1).let { self[safe: $0] == nil ? nil : $0 }, // S
+            Point(x: x - 1, y: y + 1).let { self[safe: $0] == nil ? nil : $0 }, // SW
+            Point(x: x - 1, y: y).let { self[safe: $0] == nil ? nil : $0 }, // W
+            Point(x: x - 1, y: y - 1).let { self[safe: $0] == nil ? nil : $0 }, // NW
         ]
         .compactMap { $0 }
     }
-    
+
     func draw() -> String {
         map {
             $0.map { String($0) }

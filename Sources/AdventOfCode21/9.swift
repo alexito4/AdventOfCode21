@@ -28,7 +28,7 @@ private func parseHeightmap(_ input: String) -> HeightMap {
         atLeast: 1,
         separator: "\n"
     )
-    .endLine()
+    .finalLine()
 
 //    parser.test(input)
 
@@ -74,7 +74,7 @@ private func find3LargestBasins(_ heightmap: HeightMap) throws -> Int {
 
 typealias HeightMap = [[Int]]
 
-fileprivate extension HeightMap {
+private extension HeightMap {
     func riskLevelAt(x: Int, y: Int) -> Int {
         self[x: x, y: y] + 1
     }
@@ -156,8 +156,6 @@ fileprivate extension HeightMap {
 
         return basinSize
     }
-
-
 }
 
 private typealias Neightbours = _Neightbours<Int?>
