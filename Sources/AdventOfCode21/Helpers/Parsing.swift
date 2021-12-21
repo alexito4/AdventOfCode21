@@ -1,11 +1,39 @@
 
 import Parsing
+import Combine
 
 extension Parser where Input == Substring {
     func skipFinalLine() -> AnyParser<Input, Output> {
         skip(Whitespace().pullback(\.utf8))
             .skip(End())
             .eraseToAnyParser()
+    }
+}
+
+extension Int {
+    static func binaryParser(digits: Int) -> AnyParser<Substring, Int> {
+        Prefix<Substring>(digits)
+            .flatMap { str -> AnyParser<Substring, Int> in
+                if let number = Int(str, radix: 2) {
+                    return Always(number).eraseToAnyParser()
+                } else {
+                    return Fail().eraseToAnyParser()
+                }
+            }
+            .eraseToAnyParser()
+    }
+}
+
+extension Parser {
+    func `guard`(
+        _ f: @escaping (Self.Output) -> Bool
+    ) -> AnyParser<Self.Input, Self.Output>
+    {
+        self.flatMap { input -> AnyParser<Self.Input, Self.Output> in
+            guard f(input) else { return Fail().eraseToAnyParser() }
+            return Always(input).eraseToAnyParser()
+        }
+        .eraseToAnyParser()
     }
 }
 

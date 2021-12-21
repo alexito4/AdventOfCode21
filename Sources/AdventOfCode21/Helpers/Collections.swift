@@ -39,7 +39,7 @@ enum LoopReturn {
     case `break`
 }
 
-extension Collection {
+extension Sequence {
     func toArray() -> [Element] {
         Array(self)
     }
