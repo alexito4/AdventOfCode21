@@ -1,6 +1,6 @@
 
-import Parsing
 import Combine
+import Parsing
 
 extension Parser where Input == Substring {
     func skipFinalLine() -> AnyParser<Input, Output> {
@@ -27,9 +27,8 @@ extension Int {
 extension Parser {
     func `guard`(
         _ f: @escaping (Self.Output) -> Bool
-    ) -> AnyParser<Self.Input, Self.Output>
-    {
-        self.flatMap { input -> AnyParser<Self.Input, Self.Output> in
+    ) -> AnyParser<Self.Input, Self.Output> {
+        flatMap { input -> AnyParser<Self.Input, Self.Output> in
             guard f(input) else { return Fail().eraseToAnyParser() }
             return Always(input).eraseToAnyParser()
         }

@@ -1,10 +1,3 @@
-//
-//  File.swift
-//  
-//
-//  Created by Alejandro Martinez on 20/12/21.
-//
-
 import Foundation
 import Parsing
 
@@ -38,9 +31,9 @@ private func sumMagnitude(_ input: [SFNumber]) throws -> Int {
         addition = add(addition, next)
         addition.reduce()
     }
-    
+
 //    print(addition)
-    
+
     return addition.magnitude()
 }
 
@@ -50,7 +43,7 @@ func add(_ l: SFNumber, _ r: SFNumber) -> SFNumber {
 
 // What is the largest magnitude of any sum of two different snailfish numbers from the homework assignment?
 private func largestMagnitudeOf2(_ input: [SFNumber]) throws -> Int {
-    return input
+    input
         .permutations(ofCount: 2)
         .map { combo -> Int in
             let left = combo[0]
@@ -63,35 +56,33 @@ private func largestMagnitudeOf2(_ input: [SFNumber]) throws -> Int {
 }
 
 extension SFNumber {
-    
     mutating func reduce() {
 //        print("before reduce", self.debugDescription)
         var reduced = false
         while !reduced {
             // Explode
-            if self.explode() {
+            if explode() {
 //                print("exploded", self.debugDescription)
                 continue
             }
-            
+
             // Split
-            if self.split() {
+            if split() {
 //                print("split", self.debugDescription)
                 continue
             }
-            
+
             // If it couldn't explode or split means the number is fully reduced.
             reduced = true
         }
 //        print("reduced", self.debugDescription)
     }
-    
-    
+
     // If any pair is nested inside four pairs, the leftmost such pair explodes.
     mutating func explode() -> Bool {
-        return _explodePair(level: []) != nil
+        _explodePair(level: []) != nil
     }
-    
+
     mutating func _explodePair(level: [SFNumber.Side]) -> (level: [SFNumber.Side], leftNumber: Int?, rightNumber: Int?)? {
         if level.count == 4 {
             if case let .literal(ln) = left, case let .literal(rn) = right {
@@ -102,66 +93,66 @@ extension SFNumber {
             // explode left
             switch left {
             case .literal: break
-            case .pair(let subpair):
+            case let .pair(subpair):
                 if let pending = _explodeReusable(nextLevel: level.appending(.left), current: &self, side: \.left, subpair: subpair) {
                     return pending
                 }
             }
-            
+
             // explode right
             switch right {
             case .literal: break
-            case .pair(let subpair):
+            case let .pair(subpair):
                 return _explodeReusable(nextLevel: level.appending(.right), current: &self, side: \.right, subpair: subpair)
             }
-            
+
             return nil
         }
     }
-    
+
     // If any regular number is 10 or greater, the leftmost such regular number splits.
     mutating func split() -> Bool {
         // split left
         switch left {
         case let .literal(number):
             if let new = _split(number) {
-                self.left = .pair(new)
+                left = .pair(new)
                 return true
             }
-        case .pair(let subpair):
+        case let .pair(subpair):
             var copy = subpair
             if copy.split() {
-                self.left = .pair(copy)
+                left = .pair(copy)
                 return true
             }
         }
-        
+
         // split right
         switch right {
         case let .literal(number):
             if let new = _split(number) {
-                self.right = .pair(new)
+                right = .pair(new)
                 return true
             }
-        case .pair(let subpair):
+        case let .pair(subpair):
             var copy = subpair
             if copy.split() {
-                self.right = .pair(copy)
+                right = .pair(copy)
                 return true
             }
         }
-        
+
         return false
     }
-    
+
     func magnitude() -> Int {
-        return left.magnitude(side: .left) + right.magnitude(side: .right)
+        left.magnitude(side: .left) + right.magnitude(side: .right)
     }
 }
 
 func _split(_ n: Int) -> SFNumber? {
     if n >= 10 {
-        let double = Double(n)/2
+        let double = Double(n) / 2
         return SFNumber(left: .literal(Int(double.rounded(.down))), right: .literal(Int(double.rounded(.up))))
     } else {
         return nil
@@ -171,31 +162,30 @@ func _split(_ n: Int) -> SFNumber? {
 // reuse the explode for both sides
 func _explodeReusable(
     nextLevel: [SFNumber.Side], current: inout SFNumber, side: WritableKeyPath<SFNumber, SFElement>, subpair: SFNumber
-) -> (level: [SFNumber.Side], leftNumber: Int?, rightNumber: Int?)?
-{
+) -> (level: [SFNumber.Side], leftNumber: Int?, rightNumber: Int?)? {
     var copy = subpair
     var pendingNumbers = copy._explodePair(level: nextLevel)
-    if let pending = pendingNumbers  {
+    if let pending = pendingNumbers {
         if nextLevel.count != 4 {
             // If is not the direct parent, make sure to update the subtree
             current[keyPath: side] = .pair(copy)
         }
-        
-        if let pendingRight = pending.rightNumber, (pending.level[nextLevel.count-1] != .right) {
+
+        if let pendingRight = pending.rightNumber, pending.level[nextLevel.count - 1] != .right {
             // right value is added to the first regular number to the right of the exploding pair (if any)
             if current.right.addToFirstLiteral(pendingRight, on: .left) {
                 pendingNumbers?.rightNumber = nil
             }
         }
-        
+
         // left is discarded
-        if let pendingLeft = pending.leftNumber, (pending.level[nextLevel.count-1] != .left) {
+        if let pendingLeft = pending.leftNumber, pending.level[nextLevel.count - 1] != .left {
             // left value is added to the first regular number to the left of the exploding pair (if any)
             if current.left.addToFirstLiteral(pendingLeft, on: .right) {
                 pendingNumbers?.leftNumber = nil
             }
         }
-        
+
         if nextLevel.count == 4 {
             // If is parent of exploded subpair, replace with 0
             current[keyPath: side] = .literal(0)
@@ -207,11 +197,11 @@ func _explodeReusable(
 struct SFNumber: CustomDebugStringConvertible {
     var left: SFElement
     var right: SFElement
-    
+
     enum Side: Equatable {
         case left
         case right
-        
+
         var magnitudeMultiplier: Int {
             switch self {
             case .left:
@@ -221,11 +211,11 @@ struct SFNumber: CustomDebugStringConvertible {
             }
         }
     }
-    
+
     var debugDescription: String {
         "> \(_debugDescription)"
     }
-    
+
     var _debugDescription: String {
         "[\(left._debugDescription),\(right._debugDescription)]"
     }
@@ -234,22 +224,22 @@ struct SFNumber: CustomDebugStringConvertible {
 enum SFElement {
     case literal(Int)
     indirect case pair(SFNumber)
-    
+
     var number: Int? {
         switch self {
-        case .literal(let int):
+        case let .literal(int):
             return int
         case .pair:
             return nil
         }
     }
-    
+
     mutating func addToFirstLiteral(_ n: Int, on side: SFNumber.Side) -> Bool {
         switch self {
-        case .literal(let int):
+        case let .literal(int):
             self = .literal(int + n)
             return true
-        case .pair(var subpair):
+        case var .pair(subpair):
             switch side {
             case .left:
                 if subpair.left.addToFirstLiteral(n, on: side) {
@@ -272,24 +262,23 @@ enum SFElement {
                     return false
                 }
             }
-            
         }
     }
-    
+
     var _debugDescription: String {
         switch self {
-        case .literal(let number):
+        case let .literal(number):
             return "\(number)"
-        case .pair(let sFNumber):
+        case let .pair(sFNumber):
             return sFNumber._debugDescription
         }
     }
-    
+
     func magnitude(side: SFNumber.Side) -> Int {
         switch self {
-        case .literal(let int):
+        case let .literal(int):
             return side.magnitudeMultiplier * int
-        case .pair(let sFNumber):
+        case let .pair(sFNumber):
             return side.magnitudeMultiplier * sFNumber.magnitude()
         }
     }
@@ -297,7 +286,7 @@ enum SFElement {
 
 private func parse(_ input: String) -> [SFNumber] {
     var copy = input[...]
-    
+
     func _parsePair() -> SFNumber {
         "[".parse(&copy)!
         let left: SFElement
@@ -318,7 +307,7 @@ private func parse(_ input: String) -> [SFNumber] {
         "]".parse(&copy)!
         return SFNumber(left: left, right: right)
     }
-    
+
     var numbers: [SFNumber] = []
     while !copy.isEmpty {
         let number = _parsePair()

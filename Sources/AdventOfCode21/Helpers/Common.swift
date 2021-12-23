@@ -14,7 +14,7 @@ struct Point: Hashable, CustomStringConvertible, Then {
     static func * (_ point: Point, _ number: Int) -> Point {
         .init(x: point.x * number, y: point.y * number)
     }
-    
+
     static var zero: Point { .init(x: 0, y: 0) }
 }
 

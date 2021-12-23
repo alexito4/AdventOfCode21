@@ -1,5 +1,5 @@
 do {
-    let day = day18
+    let day = day19
     print("RUN")
 //    try run(day.part1, .real)//.debug()
 //    try run(day.part2, .example).debug()
